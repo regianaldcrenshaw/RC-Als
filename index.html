@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Al's Garage</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: cyan;
+            color: red;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+        }
+
+        h1 {
+            font-size: 36px;
+        }
+
+        h2 {
+            font-size: 24px;
+            color: blue;
+        }
+
+        .inventory,
+        .materials {
+            margin: 20px 0;
+        }
+
+        .inventory {
+            display: grid;
+            grid-template-columns: repeat(5, 5fr);
+            gap: 10px;
+        }
+
+        .inventory li {
+            padding: 10px;
+            margin: 5px;
+            background-color: red;
+            color: white;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .inventory li:hover {
+            background-color: darkred;
+        }
+
+        .inventory li.selected {
+            background-color: darkcyan;
+        }
+
+        #clear-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: red;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #clear-button:hover {
+            background-color: darkred;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Al's Garage</h1>
+        <div class="inventory">
+            <ul id="item-list">
+                <li data-item="Lighting Controller">Lighting Controller</li>
+                <li data-item="Body kit">Body kit</li>
+                <li data-item="Respray kit">Respray kit</li>
+                <li data-item="Vehicle wheels">Vehicle wheels</li>
+                <li data-item="Cleaning Kit">Cleaning Kit</li>
+                <li data-item="Performance Parts">Performance Parts</li>
+                <li data-item="Engine Oil">Engine Oil</li>
+                <li data-item="Tire Replacement">Tire Replacement</li>
+                <li data-item="Clutch Replacement">Clutch Replacement</li>
+                <li data-item="Air Filter">Air Filter</li>
+                <li data-item="Spark Plug">Spark Plug</li>
+                <li data-item="Suspension parts">Suspension parts</li>
+                <li data-item="V6 Engine">V6 Engine</li>
+                <li data-item="I4 Engine">I4 Engine</li>
+                <li data-item="V8 Engine">V8 Engine</li>
+                <li data-item="V12 Engine">V12 Engine</li>
+                <li data-item="Turbo Charger">Turbo Charger</li>
+                <li data-item="EV Motor">EV Motor</li>
+                <li data-item="EV Battery">EV Battery</li>
+                <li data-item="EV Coolant">EV Coolant</li>
+                <li data-item="AWD Drivetrain">AWD Drivetrain</li>
+                <li data-item="RWD Drivetrain">RWD Drivetrain</li>
+                <li data-item="FWD Drivetrain">FWD Drivetrain</li>
+                <li data-item="Slick tires">Slick tires</li>
+                <li data-item="Semi Slick Tires">Semi Slick Tires</li>
+                <li data-item="Offroad Tires">Offroad Tires</li>
+                <li data-item="Drift Tuning Kit">Drift Tuning Kit</li>
+                <li data-item="Stance Kit">Stance Kit</li>
+                <li data-item="Tire Smoke Kit">Tire Smoke Kit</li>
+                <li data-item="Extras kit">Extras kit</li>
+                <li data-item="Repair Kit">Repair Kit</li>
+                <li data-item="Duct Tape">Duct Tape</li>
+                <li data-item="Brakepad Replacement">Brakepad Replacement</li>
+                <li data-item="Ceramic Brakes">Ceramic Brakes</li>
+                <li data-item="Nuts">Nuts</li>
+                <li data-item="Bolts">Bolts</li>
+                <li data-item="Copper Wire">Copper Wire</li>
+                <li data-item="Steel Wire">Steel Wire</li>
+                <li data-item="Barring">Barring</li>
+                <li data-item="Gear">Gear</li>
+                <li data-item="Filter">Filter</li>
+            </ul>
+        </div>
+        <div class="materials">
+            <h2>Materials Needed:</h2>
+            <ul id="material-list"></ul>
+        </div>
+        <button id="clear-button">Clear</button>
+    </div>
+    <script>
+        const inventory = {
+            "Lighting Controller": { "Copper Wire": 10, "Plastic": 10 },
+            "Body kit": { "Fibreglass": 30, "Steel": 5 },
+            "Respray kit": { "Paint": 1, "Aluminum": 3 },
+            "Vehicle wheels": { "Rubber": 40, "Aluminum": 50 },
+            "Cleaning Kit": { "Water gallon": 2, "Soap": 2 },
+            "Performance Parts": { "Iron": 100, "Steel": 100 },
+            "Engine Oil": { "Crude oil": 10, "Conventional oil": 10 },
+            "Tire Replacement": { "Rubber": 10, "Copper Wire": 2 },
+            "Clutch Replacement": { "Copper": 5, "Steel": 5, "Iron": 5 },
+            "Air Filter": { "Plastic": 10, "Barring": 1, "Filter": 1 },
+            "Spark Plug": { "Copper": 2, "Ceramic": 2, "Steel Wire": 2 },
+            "Suspension parts": { "Steel": 5, "Aluminium": 5, "Rubber": 5 },
+            "V6 Engine": { "Steel": 40, "Iron": 40, "Barring": 2, "Filter": 2, "Copper Wire": 20, "Gears": 10, "Bolts": 20, "Nuts": 20 },
+            "I4 Engine": { "Steel": 20, "Iron": 20, "Barring": 1, "Filter": 1, "Copper Wire": 10, "Gears": 5, "Bolts": 10, "Nuts": 10 },
+            "V8 Engine": { "Steel": 120, "Iron": 120, "Barring": 6, "Filter": 6, "Copper Wire": 80, "Gears": 60, "Bolts": 80, "Nuts": 80 },
+            "V12 Engine": { "Steel": 400, "Iron": 400, "Barring": 16, "Filter": 12, "Copper Wire": 160, "Gears": 100, "Bolts": 160, "Nuts": 160 },
+            "Turbo Charger": { "Aluminium": 50, "Barring": 1 },
+            "EV Motor": { "Aluminium": 15, "Barring": 1 },
+            "EV Battery": { "Lithium": 50, "Aluminium": 5, "Copper Wire": 5 },
+            "EV Coolant": { "Water Gallon": 20, "Mono-Ethelyne Glycol": 30 },
+            "AWD Drivetrain": { "Carbon": 10, "Gears": 5, "Steel": 5 },
+            "RWD Drivetrain": { "Carbon": 10, "Gears": 5, "Steel": 5 },
+            "FWD Drivetrain": { "Carbon": 10, "Gears": 5, "Steel": 5 },
+            "Slick tires": { "Rubber": 150, "Copper Wires": 60 },
+            "Semi Slick Tires": { "Rubber": 150, "Copper Wires": 50 },
+            "Offroad Tires": { "Rubber": 150, "Copper Wires": 50 },
+            "Drift Tuning Kit": { "Iron": 200, "Barring": 15, "Bolts": 20, "Nuts": 20, "Gears": 25, "Steel": 400 },
+            "Stance Kit": { "Steel": 40, "Aluminum": 50, "Rubber": 15 },
+            "Tire Smoke Kit": { "Dye": 100, "Rubber": 50 },
+            "Extras kit": { "Plastic": 50 },
+            "Repair Kit": { "Bolts": 10, "Nuts": 10, "Pliers": 1, "Screwdriver": 1 },
+            "Duct Tape": { "Glue": 10, "Rubber": 10 },
+            "Brakepad Replacement": { "Ceramic": 2, "Rubber": 2, "Fiberglass": 1 },
+            "Ceramic Brakes": { "Ceramic": 20, "Rubber": 30, "Fiberglass": 25 },
+            "Nuts": { "Iron": 1 },
+            "Bolts": { "Iron": 1 },
+            "Copper Wire": { "Copper": 1 },
+            "Steel Wire": { "Steel": 1 },
+            "Barring": { "Steel": 1 },
+            "Gear": { "Iron": 1 },
+            "Filter": { "Plastic": 1, "Steel": 1, "Carbon": 1 }
+        };
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const itemList = document.getElementById("item-list");
+            const materialList = document.getElementById("material-list");
+            const clearButton = document.getElementById("clear-button");
+
+            itemList.addEventListener("click", function (event) {
+                if (event.target.tagName === "LI") {
+                    const selectedItem = event.target.getAttribute("data-item");
+                    toggleItemSelection(event.target);
+                    displayMaterials();
+                }
+            });
+
+            clearButton.addEventListener("click", function () {
+                clearMaterials();
+                clearSelection();
+            });
+
+            function toggleItemSelection(itemElement) {
+                itemElement.classList.toggle("selected");
+            }
+
+            function displayMaterials() {
+                materialList.innerHTML = "";
+                const selectedItems = document.querySelectorAll("#item-list li.selected");
+                const totalMaterials = {};
+
+                selectedItems.forEach(item => {
+                    const itemName = item.getAttribute("data-item");
+                    const itemMaterials = inventory[itemName];
+
+                    for (const [material, quantity] of Object.entries(itemMaterials)) {
+                        if (totalMaterials[material]) {
+                            totalMaterials[material] += quantity;
+                        } else {
+                            totalMaterials[material] = quantity;
+                        }
+                    }
+                });
+
+                for (const [material, quantity] of Object.entries(totalMaterials)) {
+                    const listItem = document.createElement("li");
+                    listItem.textContent = `${material}: ${quantity}`;
+                    materialList.appendChild(listItem);
+                }
+            }
+
+            function clearMaterials() {
+                materialList.innerHTML = "";
+            }
+
+            function clearSelection() {
+                const items = itemList.getElementsByTagName("li");
+                for (let item of items) {
+                    item.classList.remove("selected");
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
